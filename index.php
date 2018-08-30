@@ -10,10 +10,16 @@
 
 //if (filter_has_var(INPUT_POST,'submit')) {
      // récupération des données provenant des données saisies par l'utilisateur
+     include("./login.inc.php");
+    $uname = isset($_POST["uName"]) ? filter_input(INPUT_POST,'uname',FILTER_SANITIZE_STRING) : "";
+    $pwd = filter_input(INPUT_POST,'pwd',FILTER_SANITIZE_STRING);
 
-    $uname = trim(filter_input(INPUT_POST,'uname',FILTER_SANITIZE_STRING));
-    $pwd = trim(filter_input(INPUT_POST,'pwd',FILTER_SANITIZE_STRING));
-
+    if (isset($uname) && isset($pwd)) {
+      if (connexion($uname, $pwd)) {
+        header("Location: main.php");
+        exit;
+      }
+    }
     // vérification des données saisies
     /*
     $result = checkUserIdentification($pseudo, $pwd);
@@ -41,7 +47,7 @@
         <fieldset>
             <legend>Connexion :</legend>
             <label for="uname"><b>Username</b></label></br>
-            <input type="text" placeholder="Enter Username" name="uname" required></br>
+            <input type="text" placeholder="Enter Username" name="uname" value="<?php echo $uname  ?>" required></br>
 
             <label for="psw"><b>Password</b></label></br>
             <input type="password" placeholder="Enter Password" name="pwd" required></br>

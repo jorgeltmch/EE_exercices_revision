@@ -1,10 +1,11 @@
 <?php
+session_start();
 function connectDb()
 {
     $server = '127.0.0.1';
     $pseudo = 'root';
     $pwd = '';
-    $dbname = 'forum';
+    $dbname = 'forumrevision';
 
     static $db = null;
 
@@ -19,14 +20,15 @@ function connectDb()
 
 function addUser($uname, $pwd, $fname, $lname)
 {
-  if (userExists($uname) == false) {
+  if (userExists($uname) != true)
+ {
     try {
             $db = connectDb();
             $sql = "INSERT INTO users(name,surname,login,password) " .
                     " VALUES (:lastName, :firstName, :username, :pwd)";
             $request = $db->prepare($sql);
             if ($request->execute(array(
-                        'lastName' => $fname,
+                        'lastName' => $lname,
                         'firstName' => $fname,
                         'username' => $uname,
                         'pwd' => sha1($pwd)))) {
@@ -40,20 +42,21 @@ function addUser($uname, $pwd, $fname, $lname)
         }
   }
   else{
-    echo "username already exists !";
+      echo "username already exists !";
   }
 
 }
 
-function userExists($uname) {
+function userExists($uname)
+{
     try {
         $db = connectDb();
         $sql = "SELECT login FROM users "
-                . "WHERE login = :username";
+                . "WHERE login = :login";
 
         $request = $db->prepare($sql);
         if ($request->execute(array(
-                    'username' => $uname))) {
+                    'login' => $uname))) {
             $result = $request->fetch(PDO::FETCH_ASSOC);
             if (isset($result['login'])) {
                 return true;
@@ -68,3 +71,24 @@ function userExists($uname) {
         return false;
     }
 }
+
+function connexion($user, $pwd)
+{
+  $db = connectDb();
+      $sql = "SELECT idUser, surname, name, login  FROM users "
+              . "WHERE idUser = :uid AND password = :pwd";
+      $request = $db->prepare($sql);
+      if ($request->execute(array(
+                  'uid' => $user,
+                  'pwd' => sha1($pwd)))) {
+          $result = $request->fetch(PDO::FETCH_ASSOC);
+          var_dump($result);
+          $_SESSION['username'] = $result['login'];
+          $_SESSION['name'] = $result['name'];
+          $_SESSION['surname'] = $result['surname'];
+          return true;
+      }
+      else {
+          return false;
+      }
+  }
