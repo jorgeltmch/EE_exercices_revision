@@ -7,12 +7,22 @@
 * Date : 30.08.2018
 * Copyright : Entreprise Ecole CFPT-I © 2018
 */
-
+include("./login.inc.php");
 $lname = filter_input(INPUT_POST,'lastName',FILTER_SANITIZE_STRING);
 $fname = filter_input(INPUT_POST,'firstName',FILTER_SANITIZE_STRING);
 $uname = trim(filter_input(INPUT_POST,'uName',FILTER_SANITIZE_STRING));
 $pwd = trim(filter_input(INPUT_POST,'pwd',FILTER_SANITIZE_STRING));
 $cpwd = trim(filter_input(INPUT_POST,'confirmedPwd',FILTER_SANITIZE_STRING));
+
+if (!empty($uname) && !empty($pwd) && !empty($cpwd) && !empty($fname) && !empty($lname)) {
+  if (sha1($pwd) == sha1($cpwd)) {
+    addUser($uname, $pwd, $fname, $lname);
+  }
+  else{
+    echo "Passwords dont match";
+  }
+}
+
  ?>
 
 <!DOCTYPE html>
@@ -46,15 +56,7 @@ $cpwd = trim(filter_input(INPUT_POST,'confirmedPwd',FILTER_SANITIZE_STRING));
         </fieldset>
       </form>
       <?php
-      if (!empty($uname) && !empty($pwd) && !empty($cpwd) && !empty($fname) && !empty($lname)) {
-        if (sha1($pwd) == sha1($cpwd)) {
-          $pwd = sha1($pwd);
-          echo $fname . " " . $lname . " " . $uname . " " . $pwd . " " . $cpwd ;
-        }
-        else{
-          echo "passwords dont match";
-        }
-      }
+
        ?>
     </body>
 </html>
