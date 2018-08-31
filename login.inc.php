@@ -1,5 +1,9 @@
 <?php
 session_start();
+/**
+*	Connexion to the database
+*	@return	$db pdo object
+*/
 function connectDb()
 {
     $server = '127.0.0.1';
@@ -17,10 +21,17 @@ function connectDb()
     }
     return $db;
 }
-
+/**
+ * Adds user to the database
+ * @param type $uname
+ * @param type $pwd
+ * @param type $fname
+ * @param type $lname
+ * @return false if the addition failed
+ */
 function addUser($uname, $pwd, $fname, $lname)
 {
-  if (userExists($uname) != true)
+  if (!userExists($uname))
  {
     try {
             $db = connectDb();
@@ -38,7 +49,7 @@ function addUser($uname, $pwd, $fname, $lname)
             }
         } catch (Exception $e) {
             echo $e->getMessage();
-            return array();
+            return NULL;
         }
   }
   else{
@@ -46,7 +57,11 @@ function addUser($uname, $pwd, $fname, $lname)
   }
 
 }
-
+/**
+ * desfines if the username already exists
+ * @param type $uname
+ * @return boolean true or false depending on the result
+ */
 function userExists($uname)
 {
     try {
@@ -71,24 +86,95 @@ function userExists($uname)
         return false;
     }
 }
-
+/**
+ * Verifies if the connexion is correct
+ * @param type $user
+ * @param type $pwd
+ * @return type
+ */
 function connexion($user, $pwd)
 {
   $db = connectDb();
       $sql = "SELECT idUser, surname, name, login  FROM users "
-              . "WHERE idUser = :uid AND password = :pwd";
+              . "WHERE login = :uid AND password = :pwd";
       $request = $db->prepare($sql);
       if ($request->execute(array(
                   'uid' => $user,
                   'pwd' => sha1($pwd)))) {
-          $result = $request->fetch(PDO::FETCH_ASSOC);
-          var_dump($result);
-          $_SESSION['username'] = $result['login'];
-          $_SESSION['name'] = $result['name'];
-          $_SESSION['surname'] = $result['surname'];
-          return true;
+            $result = $request->fetch(PDO::FETCH_ASSOC);
+
+            var_dump($result["login"]);
+            $_SESSION['username'] = $result['login'];
+            $_SESSION['name'] = $result['name'];
+            $_SESSION['surname'] = $result['surname'];
+            $_SESSION["userId"] = $result["idUser"];
+            return $result;
+
+
       }
       else {
-          return false;
+          return NULL;
       }
+  }
+  /**
+   * logs out and clears the session
+   */
+   function logout(){
+    $_SESSION = array();
+    if (ini_get("session.use_cookies"))
+    {
+      setcookie(session_name(), '', 0);
+    }
+    session_destroy();
+
+  }
+  /**
+   * inserts the post in the database
+   * @param type $idUser (user that published the post)
+   * @param type $title
+   * @param type $description
+   * @return the post if that worked, if not, returns null
+   */
+  function insertPost($idUser, $title, $description){
+    try {
+            $db = connectDb();
+            $sql = "INSERT INTO news(title,description,idUser) " .
+                    " VALUES (:title, :description, :id)";
+            $request = $db->prepare($sql);
+            if ($request->execute(array(
+                        'title' => $title,
+                        'description' => $description,
+                        'id' => $idUser))) {
+                return $db->lastInsertID();
+            } else {
+                return NULL;
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            return array();
+        }
+  }
+  /**
+   * returns all of the user's posts
+   * @param type $userId
+   * @return \Exception
+   */
+  function getPosts($userId){
+    try {
+        $db = connectDb();
+        $sql = "SELECT title, description FROM news "
+                . "WHERE idUser = :id";
+
+        $request = $db->prepare($sql);
+        if ($request->execute(array(
+                    'id' => $userId))) {
+            $result = $request->fetch(PDO::FETCH_ASSOC);
+            return $result;
+        } else {
+            return NULL;
+        }
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return $e;
+    }
   }

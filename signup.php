@@ -15,12 +15,12 @@ $uname = isset($_POST["uName"]) ? filter_input(INPUT_POST,'uName',FILTER_SANITIZ
 /*$lname = filter_input(INPUT_POST,'lastName',FILTER_SANITIZE_STRING);
 $fname = filter_input(INPUT_POST,'firstName',FILTER_SANITIZE_STRING);
 $uname = trim(filter_input(INPUT_POST,'uName',FILTER_SANITIZE_STRING)); */
-$pwd = trim(filter_input(INPUT_POST,'pwd',FILTER_SANITIZE_STRING));
-$cpwd = trim(filter_input(INPUT_POST,'confirmedPwd',FILTER_SANITIZE_STRING));
+$pwd = filter_input(INPUT_POST,'pwd',FILTER_SANITIZE_STRING);
+$cpwd = filter_input(INPUT_POST,'confirmedPwd',FILTER_SANITIZE_STRING);
 
 if (!empty($uname) && !empty($pwd) && !empty($cpwd) && !empty($fname) && !empty($lname)) {
-  if (sha1($pwd) == sha1($cpwd)) {
-    addUser($uname, $pwd, $fname, $lname);
+  if ($pwd == $cpwd) {
+    logout($uname, $pwd, $fname, $lname);
   }
   else{
     echo "Passwords dont match";

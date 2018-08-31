@@ -11,11 +11,12 @@
 //if (filter_has_var(INPUT_POST,'submit')) {
      // récupération des données provenant des données saisies par l'utilisateur
      include("./login.inc.php");
-    $uname = isset($_POST["uName"]) ? filter_input(INPUT_POST,'uname',FILTER_SANITIZE_STRING) : "";
+    $uname = isset($_POST["uname"]) ? filter_input(INPUT_POST,'uname',FILTER_SANITIZE_STRING) : "";
     $pwd = filter_input(INPUT_POST,'pwd',FILTER_SANITIZE_STRING);
 
     if (isset($uname) && isset($pwd)) {
-      if (connexion($uname, $pwd)) {
+      $ok = connexion($uname, $pwd);
+      if ($ok != NULL) {
         header("Location: main.php");
         exit;
       }
