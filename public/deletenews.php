@@ -18,11 +18,11 @@ $delete = isset($_POST["delete"]) ? $_POST["delete"] : "";
       exit;
     }
     else{
-      echo ":(";
+      echo "<div class=\"info\">The news was deleted</div>";
     }
   }
   else{
-    echo "Le post n'a pas été supprimé";
+      echo "<div class=\"info\">The news did not got deleted</div>";
   }
  ?>
 
@@ -31,7 +31,7 @@ $delete = isset($_POST["delete"]) ? $_POST["delete"] : "";
   <head>
     <meta charset="utf-8">
     <title>EE Revision</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="../resources/style.css">
   </head>
     <body>
       <form action="#" method="post">

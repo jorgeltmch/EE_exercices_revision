@@ -14,11 +14,10 @@ $news = getNewsById($idNews);
     $title = filter_input(INPUT_POST,'title',FILTER_SANITIZE_STRING);
     $description = filter_input(INPUT_POST,'description',FILTER_SANITIZE_STRING);
     if (editNews($idNews, $title, $description) == true) {
-      
-      echo ":)";
+      echo "<div class=\"info\">The news was updated</div>";
     }
     else{
-      echo ":(";
+      echo "<div class=\"warning\">The news could not be updated</div>";
     }
   }
  ?>
@@ -28,7 +27,7 @@ $news = getNewsById($idNews);
   <head>
     <meta charset="utf-8">
     <title>EE Revision</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="../resources/style.css">
   </head>
     <body>
       <?php

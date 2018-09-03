@@ -19,10 +19,12 @@ if (!empty($_SESSION["userId"])) {
     $pwd = filter_input(INPUT_POST,'pwd',FILTER_SANITIZE_STRING);
 
     if (isset($uname) && isset($pwd)) {
-      $ok = connexion($uname, $pwd);
-      if ($ok != NULL) {
-        header("Location: main.php");
+      if (connexion($uname, $pwd) != NULL) {
+        header("Location: ./main.php");
         exit;
+      }
+      else{
+        echo "<div class=\"warning\">Login has failed</div>";
       }
     }
     // vérification des données saisies
@@ -46,6 +48,7 @@ if (!empty($_SESSION["userId"])) {
   <head>
     <meta charset="utf-8">
     <title>EE Revision</title>
+    <link rel="stylesheet" href="../resources/style.css">
   </head>
     <body>
       <form action="index.php" method="POST">
@@ -62,10 +65,5 @@ if (!empty($_SESSION["userId"])) {
             <a href="./signup.php">Don't have an account?</a>
         </fieldset>
       </form>
-      <?php
-      if (!empty($uname) && !empty($pwd)) {
-        echo $uname . " " . $pwd;
-      }
-       ?>
     </body>
 </html>

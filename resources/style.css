@@ -9,12 +9,12 @@
     margin-top: 30px;
 }
 
-#warning
+.warning
 {
     color: red;
 }
 
-#info
+.info
 {
     color: green;
 }

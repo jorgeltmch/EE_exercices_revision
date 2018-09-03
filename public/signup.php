@@ -23,7 +23,7 @@ if (!empty($uname) && !empty($pwd) && !empty($cpwd) && !empty($fname) && !empty(
     addUser($uname, $pwd, $fname, $lname);
   }
   else{
-    echo "Passwords dont match";
+    echo "<div class=\"warning\">Passwords don't match</div>";
   }
 }
 
@@ -34,6 +34,7 @@ if (!empty($uname) && !empty($pwd) && !empty($cpwd) && !empty($fname) && !empty(
   <head>
     <meta charset="utf-8">
     <title>EE Revision</title>
+    <link rel="stylesheet" href="../resources/style.css">
   </head>
     <body>
       <form action="signup.php" method="POST">

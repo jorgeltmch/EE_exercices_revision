@@ -8,6 +8,9 @@
 * Copyright : Entreprise Ecole CFPT-I © 2018
 */
 include("./login.inc.php");
+$title = isset($_POST["title"]) ? filter_input(INPUT_POST,'title',FILTER_SANITIZE_STRING) : "";
+$description = isset($_POST["description"]) ? filter_input(INPUT_POST,'description',FILTER_SANITIZE_STRING) : "";
+$posts = getPosts($_SESSION["userId"]);
  ?>
 
 <!DOCTYPE html>
@@ -15,14 +18,10 @@ include("./login.inc.php");
   <head>
     <meta charset="utf-8">
     <title>EE Revision</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="../resources/style.css">
   </head>
     <body>
       <?php
-      $title = isset($_POST["title"]) ? filter_input(INPUT_POST,'title',FILTER_SANITIZE_STRING) : "";
-      $description = isset($_POST["description"]) ? filter_input(INPUT_POST,'description',FILTER_SANITIZE_STRING) : "";
-      $posts = getPosts($_SESSION["userId"]);
-
       if (!empty($_SESSION["username"])) {
         echo "<h1>Bonjour " . $_SESSION["surname"] . " " . $_SESSION["name"] . ", voici votre fil d'actualités ! </h1>";
       }
@@ -31,13 +30,13 @@ include("./login.inc.php");
         exit;
       }
 
-
       if (filter_has_var(INPUT_POST, "add")) {
         if (empty($title) || empty($description)) {
-          echo "<h1>All fields must be completed</h1>";
+          echo "<div class=\"warning\">All fields must be completed</div>";
         }
         else{
           insertPost($_SESSION["userId"], $title, $description);
+          echo "<div class=\"info\">The news was published</div>";
         }
       }
 

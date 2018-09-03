@@ -31,10 +31,8 @@ function connectDb()
  */
 function addUser($uname, $pwd, $fname, $lname)
 {
-  echo "AHAHAHHA";
   if (userExists($uname) == false)
  {
-
     try {
             $db = connectDb();
             $sql = "INSERT INTO users(name,surname,login,password) " .
@@ -55,7 +53,7 @@ function addUser($uname, $pwd, $fname, $lname)
         }
   }
   else{
-      echo "username already exists !";
+      echo "<div class=\"warning\">Username already exists !</div>";
   }
 
 }
@@ -104,15 +102,11 @@ function connexion($user, $pwd)
                   'uid' => $user,
                   'pwd' => sha1($pwd)))) {
             $result = $request->fetch(PDO::FETCH_ASSOC);
-
-            var_dump($result["login"]);
             $_SESSION['username'] = $result['login'];
             $_SESSION['name'] = $result['name'];
             $_SESSION['surname'] = $result['surname'];
             $_SESSION["userId"] = $result["idUser"];
             return $result;
-
-
       }
       else {
           return NULL;
