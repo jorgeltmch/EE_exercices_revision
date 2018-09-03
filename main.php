@@ -15,6 +15,7 @@ include("./login.inc.php");
   <head>
     <meta charset="utf-8">
     <title>EE Revision</title>
+    <link rel="stylesheet" href="./css/style.css">
   </head>
     <body>
       <?php
@@ -23,7 +24,7 @@ include("./login.inc.php");
       $posts = getPosts($_SESSION["userId"]);
 
       if (!empty($_SESSION["username"])) {
-        echo "<h1>Bonjour " . $_SESSION["surname"] . " " . $_SESSION["name"] . ", voici votre fil d'actualités !";
+        echo "<h1>Bonjour " . $_SESSION["surname"] . " " . $_SESSION["name"] . ", voici votre fil d'actualités ! </h1>";
       }
       else{
         header("Location: index.php");
@@ -51,7 +52,7 @@ include("./login.inc.php");
          <fieldset>
              <legend>New post :</legend>
              <label for="uname"><b>Title</b></label></br>
-             <input type="text" placeholder="Enter Username" name="title" value="<?php echo $title ?>"></br>
+             <input type="text" name="title" value="<?php echo $title ?>"></br>
 
              <label for="description"><b>Description</b></label></br>
              <textarea rows="10" cols="100" name="description"><?php echo $description ?></textarea>
@@ -59,11 +60,21 @@ include("./login.inc.php");
          </fieldset>
          <button type="submit" name="logout">Log Out</button>
        </form>
-       <?php
-       foreach ($posts as $key => $value) {
-         print_r($value);
-       }
+       <?php foreach ($posts as $key => $value) {
+         $user = getUserById($value["idUser"]);
+         ?>
+         <div class="post">
+           <p> Auteur : <?php echo $user[0]["name"] ?> <?php echo $user[0]["surname"]; ?></p>
+           <p> Posté le : <?php echo $value["creationDate"] ?>. Dernieres modifications le : <?php echo $value["lastEditDate"]; ?>.</p>
+           <h2> <?php echo $value["title"]; ?> </h2>
+           <p><?php echo $value["description"]; ?></p>
+           <?php if ($user[0]["login"] == $_SESSION["username"]) : ?>
+             <a href="./updateNews.php?idNews=<?php echo $value["idNews"];?>">Edit</a>
+             <a href="./deleteNews.php?idNews=<?php echo $value["idNews"];?>">Delete</a>
+           <?php endif; ?>
 
-        ?>
+         </div>
+       <?php } ?>
+
     </body>
 </html>

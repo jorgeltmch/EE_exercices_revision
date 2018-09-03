@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Jeu 30 Août 2018 à 16:27
+-- Généré le :  Lun 03 Septembre 2018 à 11:31
 -- Version du serveur :  5.6.15-log
 -- Version de PHP :  5.4.24
 
@@ -33,10 +33,12 @@ CREATE TABLE IF NOT EXISTS `news` (
   `title` varchar(50) NOT NULL,
   `description` varchar(100) NOT NULL,
   `idUser` int(11) NOT NULL,
+  `creationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `lastEditDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idNews`),
   KEY `idUser` (`idUser`),
   KEY `idUser_2` (`idUser`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=44 ;
 
 -- --------------------------------------------------------
 
@@ -49,22 +51,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `surname` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `login` varchar(50) NOT NULL,
-  `password` int(40) NOT NULL,
+  `password` varchar(100) NOT NULL,
   PRIMARY KEY (`idUser`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
-
---
--- Contenu de la table `users`
---
-
-INSERT INTO `users` (`idUser`, `surname`, `name`, `login`, `password`) VALUES
-(11, '2', '3', '3', 2147483647),
-(12, '2e', '3e', '3', 0),
-(13, '2e', '3e', '3', 0),
-(14, 'a', 'a', '0', 86),
-(15, 's', 's', 'wdwdawdawdas', 0),
-(16, 'wda', 'wdawdwad', 'aw', 0),
-(17, 'jorge', 'machado', 'xel', 5898);
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
 
 --
 -- Contraintes pour les tables exportées

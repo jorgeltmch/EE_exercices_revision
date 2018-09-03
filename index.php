@@ -7,10 +7,14 @@
 * Date : 30.08.2018
 * Copyright : Entreprise Ecole CFPT-I © 2018
 */
-
+include("./login.inc.php");
+if (!empty($_SESSION["userId"])) {
+  header("Location: main.php");
+  exit;
+}
 //if (filter_has_var(INPUT_POST,'submit')) {
      // récupération des données provenant des données saisies par l'utilisateur
-     include("./login.inc.php");
+
     $uname = isset($_POST["uname"]) ? filter_input(INPUT_POST,'uname',FILTER_SANITIZE_STRING) : "";
     $pwd = filter_input(INPUT_POST,'pwd',FILTER_SANITIZE_STRING);
 

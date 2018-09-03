@@ -31,8 +31,10 @@ function connectDb()
  */
 function addUser($uname, $pwd, $fname, $lname)
 {
-  if (!userExists($uname))
+  echo "AHAHAHHA";
+  if (userExists($uname) == false)
  {
+
     try {
             $db = connectDb();
             $sql = "INSERT INTO users(name,surname,login,password) " .
@@ -162,12 +164,35 @@ function connexion($user, $pwd)
   function getPosts($userId){
     try {
         $db = connectDb();
-        $sql = "SELECT title, description FROM news "
-                . "WHERE idUser = :id";
+        $sql = "SELECT idNews, title, description, creationDate, lastEditDate, idUser FROM news ORDER BY lastEditDate DESC";
 
         $request = $db->prepare($sql);
         if ($request->execute(array(
                     'id' => $userId))) {
+            $result = $request->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } else {
+            return NULL;
+        }
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return $e;
+    }
+  }
+  /**
+   * returns selected news
+   * @param type $idNews
+   * @return \Exception
+   */
+  function getNewsById($idNews){
+    try {
+        $db = connectDb();
+        $sql = "SELECT description, title FROM news "
+                . "WHERE idNews = :id";
+
+        $request = $db->prepare($sql);
+        if ($request->execute(array(
+                    'id' => $idNews))) {
             $result = $request->fetch(PDO::FETCH_ASSOC);
             return $result;
         } else {
@@ -178,3 +203,79 @@ function connexion($user, $pwd)
         return $e;
     }
   }
+
+  /**
+   * returns selected user
+   * @param type $idUser
+   * @return \Exception
+   */
+function getUserById($idUser){
+  try {
+      $db = connectDb();
+      $sql = "SELECT surname, name, login FROM users "
+              . "WHERE idUser = :id";
+
+      $request = $db->prepare($sql);
+      if ($request->execute(array(
+                  'id' => $idUser))) {
+          $result = $request->fetchAll(PDO::FETCH_ASSOC);
+          return $result;
+      } else {
+          return NULL;
+      }
+  } catch (Exception $e) {
+      echo $e->getMessage();
+      return $e;
+  }
+}
+/**
+ * edits news that already exists
+ * @param type $idNews
+ * @param type $title
+ * @param type $description
+ * @return boolean true or false depending on if it worked or not
+ */
+function editNews($idNews, $title, $description){
+  try {
+          $db = connectDb();
+          $sql = "UPDATE news SET title = :title , description = :description WHERE idNews = :id";
+          $request = $db->prepare($sql);
+          if ($request->execute(array(
+                      'id' => $idNews,
+                      'title' => $title,
+                      'description' => $description
+                    ))) {
+              return true;
+          } else {
+              return false;
+          }
+      } catch (Exception $e) {
+          echo $e->getMessage();
+          return false;
+      }
+}
+
+/**
+ * deletes news that already exists
+ * @param type $idNews
+ * @param type $title
+ * @param type $description
+ * @return boolean true or false depending on if it worked or not
+ */
+function deleteNews($idNews){
+  try {
+          $db = connectDb();
+          $sql = "DELETE FROM news WHERE idNews = :id";
+          $request = $db->prepare($sql);
+          if ($request->execute(array(
+                      'id' => $idNews
+                    ))) {
+              return true;
+          } else {
+              return false;
+          }
+      } catch (Exception $e) {
+          echo $e->getMessage();
+          return false;
+      }
+}

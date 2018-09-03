@@ -20,7 +20,7 @@ $cpwd = filter_input(INPUT_POST,'confirmedPwd',FILTER_SANITIZE_STRING);
 
 if (!empty($uname) && !empty($pwd) && !empty($cpwd) && !empty($fname) && !empty($lname)) {
   if ($pwd == $cpwd) {
-    logout($uname, $pwd, $fname, $lname);
+    addUser($uname, $pwd, $fname, $lname);
   }
   else{
     echo "Passwords dont match";
